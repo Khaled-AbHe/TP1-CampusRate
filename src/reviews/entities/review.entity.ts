@@ -1,4 +1,4 @@
-import { randomStringGenerator } from '@nestjs/common/internal';
+import RandExp from 'randexp';
 import { CreateReviewDto } from '../dto/create-review.dto.js';
 
 export class Review {
@@ -11,7 +11,7 @@ export class Review {
   updatedAt: Date;
 
   constructor(dto: CreateReviewDto) {
-    this.id = 'rev_' + randomStringGenerator(); //temp
+    this.id = new RandExp(/^rev_01J[A-Z]{3}\d{3}$/).gen();
     this.placeId = dto.placeId;
     this.authorName = dto.authorName;
     this.rating = dto.rating;
