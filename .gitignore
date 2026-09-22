@@ -24,4 +24,4 @@ lerna-debug.log*
 .tmp
 
 # tsconfig build info
-tsconfig.build.tsbuildinfo
+*.tsbuildinfo

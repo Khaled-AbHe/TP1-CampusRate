@@ -1,6 +1,6 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 
-export function configureApp(app: INestApplication) {
+export function AppConfig(app: INestApplication) {
   app.setGlobalPrefix('api');
 
   app.enableVersioning({

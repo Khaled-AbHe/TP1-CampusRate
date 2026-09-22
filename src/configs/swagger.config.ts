@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-export function configureSwagger(app: INestApplication): void {
+export function SwaggerConfig(app: INestApplication): void {
   const config = new DocumentBuilder()
     .setTitle('CampusRate API')
     .setDescription(

@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import { configureApp } from './configure-app.js';
-import { configureSwagger } from './configure-swagger.js';
+import { AppConfig } from './configs/app.config.js';
+import { SwaggerConfig } from './configs/swagger.config.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  configureApp(app);
-  configureSwagger(app);
+  AppConfig(app);
+  SwaggerConfig(app);
 
   await app.listen(process.env.PORT ?? 3000);
 }
