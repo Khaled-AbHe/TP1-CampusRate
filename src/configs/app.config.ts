@@ -1,4 +1,8 @@
-import { INestApplication, VersioningType } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 
 export function AppConfig(app: INestApplication) {
   app.setGlobalPrefix('api');
@@ -8,4 +12,12 @@ export function AppConfig(app: INestApplication) {
     prefix: 'v',
     defaultVersion: '1',
   });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 }
