@@ -22,3 +22,6 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+# tsconfig build info
+tsconfig.build.tsbuildinfo
