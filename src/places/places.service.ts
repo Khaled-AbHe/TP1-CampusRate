@@ -8,8 +8,8 @@ import { Place } from './entities/place.entity.js';
 export class PlacesService {
   private readonly jdb: JsonDb = new JsonDb('places');
 
-  async create(dto: CreatePlaceDto) {
-    const allPlaces = await this.findAll();
+  async createPlace(dto: CreatePlaceDto) {
+    const allPlaces = await this.findAllPlaces();
     const place = new Place(dto);
     allPlaces.push(place);
     await this.jdb.writeData(allPlaces);
@@ -17,20 +17,20 @@ export class PlacesService {
     return { message: 'Place created successfully!', data: place };
   }
 
-  async findAll(): Promise<Place[]> {
+  async findAllPlaces(): Promise<Place[]> {
     return await this.jdb.readData();
   }
 
-  async findOne(id: string) {
-    const place = (await this.findAll()).find((place) => place.id === id);
+  async findOnePlaceById(id: string) {
+    const place = (await this.findAllPlaces()).find((place) => place.id === id);
 
     if (!place) throw new NotFoundException('Place doesnt exist');
 
     return place;
   }
 
-  async update(id: string, dto: UpdatePlaceDto) {
-    const allPlaces = await this.findAll();
+  async updatePlaceById(id: string, dto: UpdatePlaceDto) {
+    const allPlaces = await this.findAllPlaces();
 
     const updatedPlaces = allPlaces.map((place) =>
       place.id === id ? { ...place, ...dto, updatedAt: new Date() } : place,
@@ -40,13 +40,13 @@ export class PlacesService {
 
     return {
       message: 'Place updated successfully!',
-      data: await this.findOne(id),
+      data: await this.findOnePlaceById(id),
     };
   }
 
-  async remove(id: string) {
-    const allPlaces = await this.findAll();
-    const targetPlace = await this.findOne(id);
+  async removePlaceById(id: string) {
+    const allPlaces = await this.findAllPlaces();
+    const targetPlace = await this.findOnePlaceById(id);
 
     const updatedPlaces = allPlaces.filter(
       (place) => place.id !== targetPlace.id,

@@ -17,26 +17,26 @@ export class PlacesController {
 
   @Post()
   create(@Body() createPlaceDto: CreatePlaceDto) {
-    return this.placesService.create(createPlaceDto);
+    return this.placesService.createPlace(createPlaceDto);
   }
 
   @Get()
-  findAll() {
-    return this.placesService.findAll();
+  findAllPlaces() {
+    return this.placesService.findAllPlaces();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.placesService.findOne(id);
+  findOnePlaceById(@Param('id') id: string) {
+    return this.placesService.findOnePlaceById(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdatePlaceDto) {
-    return this.placesService.update(id, dto);
+    return this.placesService.updatePlaceById(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.placesService.remove(id);
+    return this.placesService.removePlaceById(id);
   }
 }
