@@ -5,5 +5,6 @@ import { PlacesController } from './places.controller.js';
 @Module({
   controllers: [PlacesController],
   providers: [PlacesService],
+  exports: [PlacesService],
 })
 export class PlacesModule {}

@@ -2,7 +2,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { readFile, writeFile } from 'node:fs/promises';
 
 export class JsonDb {
-  private readonly filePath = 'src/data/database.json';
+  private readonly filePath = 'src/database.json';
   private key: string;
 
   constructor(key: string) {
@@ -18,6 +18,11 @@ export class JsonDb {
       // Incase the file exists but this specific key is missing
       if (!(this.key in parsedData)) {
         parsedData[this.key] = [];
+        await writeFile(
+          this.filePath,
+          JSON.stringify(parsedData, null, 2),
+          'utf-8',
+        );
       }
       return parsedData;
     } catch (error: any) {

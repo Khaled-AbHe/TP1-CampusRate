@@ -20,9 +20,9 @@ import { PlacesService } from './places.service.js';
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
 import { Place } from './entities/place.entity.js';
-import { RemovePlaceResponseDto } from './dto/remove-response.dto.js';
-import { CreatePlaceResponseDto } from './dto/create-place-response.dto.js';
-import { UpdatePlaceResponseDto } from './dto/update-place-response.dto.js';
+import { RemovePlaceResponseDto } from './dto/responses/remove-place-response.dto.js';
+import { CreatePlaceResponseDto } from './dto/responses/create-place-response.dto.js';
+import { UpdatePlaceResponseDto } from './dto/responses/update-place-response.dto.js';
 
 @ApiTags('Places')
 @Controller('places')
