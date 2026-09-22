@@ -1,11 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
+import { JsonDb } from '../jsondb.js';
 
 @Injectable()
 export class PlacesService {
-  create(createPlaceDto: CreatePlaceDto) {
-    return 'This action adds a new place';
+  private readonly jdb: JsonDb = new JsonDb('places');
+
+  async create(dto: CreatePlaceDto) {
+    const currentData = await this.jdb.readData(); // get the data
+
+    currentData.push(dto); // add the new data
+
+    await this.jdb.writeData(currentData); // save the new data
+
+    return { message: 'Item saved successfully!', data: dto };
   }
 
   findAll() {

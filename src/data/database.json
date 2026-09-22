@@ -5,9 +5,27 @@
       "authorName": "string",
       "rating": "number",
       "comment": "string"
+    },
+    {
+      "placeId": "string",
+      "authorName": "string",
+      "rating": "number",
+      "comment": "string"
     }
   ],
   "reviews": [
+    {
+      "placeId": "string",
+      "authorName": "string",
+      "rating": "number",
+      "comment": "string"
+    },
+    {
+      "placeId": "string",
+      "authorName": "string",
+      "rating": "number",
+      "comment": "string"
+    },
     {
       "placeId": "string",
       "authorName": "string",
