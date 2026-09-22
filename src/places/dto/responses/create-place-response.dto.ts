@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Place } from '../entities/place.entity.js';
+import { Place } from '../../entities/place.entity.js';
 
 export class CreatePlaceResponseDto {
   @ApiProperty({ example: 'Place created successfully!' })
