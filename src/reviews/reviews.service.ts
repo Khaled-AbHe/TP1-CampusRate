@@ -1,11 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto.js';
 import { UpdateReviewDto } from './dto/update-review.dto.js';
+import { JsonDb } from '../jsondb.js';
 
 @Injectable()
 export class ReviewsService {
-  create(createReviewDto: CreateReviewDto) {
-    return 'This action adds a new review';
+  private readonly jdb: JsonDb = new JsonDb('reviews');
+
+  async create(dto: CreateReviewDto) {
+    const currentData = await this.jdb.readData(); // get the data
+
+    currentData.push(dto); // add the new data
+
+    await this.jdb.writeData(currentData); // save the new data
+
+    return { message: 'Item saved successfully!', data: dto };
   }
 
   findAll() {
