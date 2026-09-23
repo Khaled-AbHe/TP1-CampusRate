@@ -2,7 +2,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { readFile, writeFile } from 'node:fs/promises';
 
 export class JsonDb<T> {
-  private readonly filePath = 'src/database.json';
+  private readonly filePath = process.env.FILE_PATH ?? 'src/database.json';
   private key: string;
 
   constructor(key: string) {
