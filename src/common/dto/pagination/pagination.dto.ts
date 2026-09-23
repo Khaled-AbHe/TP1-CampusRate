@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PageOptionsDto } from './page-options.dto.js';
 
-export class PageDataDto {
+export class PaginationDto {
   @ApiProperty()
   readonly page: number;
 
@@ -15,8 +15,8 @@ export class PageDataDto {
   readonly totalPages: number;
 
   constructor(pageOptionsDto: PageOptionsDto, itemCount: number) {
-    this.page = pageOptionsDto.page ?? 1;
-    this.limit = pageOptionsDto.limit ?? 10;
+    this.page = pageOptionsDto.page;
+    this.limit = pageOptionsDto.limit;
     this.totalItems = itemCount;
   }
 }

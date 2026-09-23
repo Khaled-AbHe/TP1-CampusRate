@@ -7,7 +7,7 @@ import { PlacesService } from '../places/places.service.js';
 
 @Injectable()
 export class ReviewsService {
-  private readonly jdb: JsonDb = new JsonDb('reviews');
+  private readonly jdb: JsonDb<Review> = new JsonDb<Review>('reviews');
 
   constructor(private placesService: PlacesService) {}
 

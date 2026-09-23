@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray } from 'class-validator';
-import { PageDataDto } from './page-data.dto.js';
+import { PaginationDto } from './pagination.dto.js';
 
 export class PageDto<T> {
   @IsArray()
   @ApiProperty({ isArray: true })
   readonly data: T[];
 
-  @ApiProperty({ type: () => PageDataDto })
-  readonly meta: PageDataDto;
+  @ApiProperty({ type: () => PaginationDto })
+  readonly pagination: PaginationDto;
 
-  constructor(data: T[], meta: PageDataDto) {
+  constructor(data: T[], pagination: PaginationDto) {
     this.data = data;
-    this.meta = meta;
+    this.pagination = pagination;
   }
 }
