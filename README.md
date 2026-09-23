@@ -1,114 +1,226 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CampusRate API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Une API REST qui permet aux étudiants de consulter divers endroits de leur campus (bibliothèques, espaces d'étude, cafétérias, laboratoires informatiques, etc.) et de partager leurs opinions au moyen de notes et de commentaires.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Construite avec [NestJS](https://nestjs.com/) et TypeScript. Les données sont sauvegardées dans un fichier JSON local, donc aucune base de données n'est à configurer.
 
-## Description
+## Fonctionnalités
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- CRUD pour les **endroits** (places) et les **appréciations** (reviews)
+- **Statistiques de notes automatiques** : chaque endroit conserve une `averageRating` et un `reviewCount` à jour, recalculés à chaque création, modification ou suppression d'une appréciation
+- **Pagination** sur les routes de liste, ainsi que filtrage des endroits par catégorie
+- **Validation des requêtes** : les propriétés inconnues sont rejetées, et les types et intervalles sont vérifiés
+- **Erreurs standardisées** au format `application/problem+json`
+- Documentation **OpenAPI / Swagger** générée à partir du code
+- **Versionnement par URI** (`/api/v1/...`)
 
-## Project setup
+## Démarrage
+
+### Prérequis
+
+- Une version LTS récente de Node.js (les définitions de types du projet ciblent Node 24)
+- npm
+
+### Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+### Configuration
+
+La configuration est lue depuis un fichier `.env` optionnel à la racine du projet.
+
+| Variable    | Valeur par défaut   | Description                                              |
+| ----------- | ------------------- | -------------------------------------------------------- |
+| `PORT`      | `3000`              | Port d'écoute du serveur                                 |
+| `FILE_PATH` | `src/database.json` | Chemin du fichier JSON utilisé comme « base de données » |
+
+Exemple de `.env` :
+
+```env
+PORT=3000
+FILE_PATH=src/database.json
+```
+
+### Lancer l'application
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# développement (mode watch)
+npm run start:dev
 ```
 
-## Run tests
+Une fois l'application démarrée :
+
+| Élément              | URL                                       |
+| -------------------- | ----------------------------------------- |
+| URL de base de l'API | `http://localhost:3000/api/v1`            |
+| Swagger UI           | `http://localhost:3000/docs`              |
+| OpenAPI JSON         | `http://localhost:3000/docs/openapi.json` |
+
+## Aperçu de l'API
+
+Toutes les routes sont préfixées par `/api/v1`.
+
+### Endroits (Places)
+
+| Méthode  | Endpoint      | Description                                                   |
+| -------- | ------------- | ------------------------------------------------------------- |
+| `POST`   | `/places`     | Créer un endroit                                              |
+| `GET`    | `/places`     | Lister les endroits (paginé, filtrable par catégorie)         |
+| `GET`    | `/places/:id` | Récupérer un endroit par son identifiant                      |
+| `PATCH`  | `/places/:id` | Mettre à jour partiellement un endroit                        |
+| `DELETE` | `/places/:id` | Supprimer un endroit (seulement s'il n'a aucune appréciation) |
+
+### Appréciations (Reviews)
+
+| Méthode  | Endpoint       | Description                                    |
+| -------- | -------------- | ---------------------------------------------- |
+| `POST`   | `/reviews`     | Créer une appréciation pour un endroit         |
+| `GET`    | `/reviews`     | Lister les appréciations (paginé)              |
+| `GET`    | `/reviews/:id` | Récupérer une appréciation par son identifiant |
+| `PATCH`  | `/reviews/:id` | Mettre à jour partiellement une appréciation   |
+| `DELETE` | `/reviews/:id` | Supprimer une appréciation                     |
+
+### Pagination et filtrage
+
+Les routes de liste acceptent les paramètres de requête suivants :
+
+| Paramètre        | S'applique à | Description                                                                 |
+| ---------------- | ------------ | --------------------------------------------------------------------------- |
+| `page`           | les deux     | Numéro de page, à partir de 1                                               |
+| `limit`          | les deux     | Nombre d'éléments par page, de 1 à 50                                       |
+| `categoryFilter` | Places       | Retourne seulement les endroits de cette [catégorie](#catégories-dendroits) |
+
+Les réponses ont la forme suivante :
+
+```json
+{
+  "data": [],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "totalItems": 42,
+    "totalPages": 5
+  }
+}
+```
+
+### Exemple
 
 ```bash
-# unit tests
-$ npm run test
+# Créer un endroit
+curl -X POST http://localhost:3000/api/v1/places \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Bibliothèque centrale",
+    "description": "Grand espace de lecture calme avec prises électriques",
+    "category": "Library",
+    "address": "Pavillon A, 2e étage",
+    "services": ["Wi-Fi", "Prises électriques"]
+  }'
 
-# e2e tests
-$ npm run test:e2e
+# Ajouter une appréciation (utiliser l'« id » retourné ci-dessus)
+curl -X POST http://localhost:3000/api/v1/reviews \
+  -H "Content-Type: application/json" \
+  -d '{
+    "placeId": "plc_01JABC123",
+    "authorName": "Camille Tremblay",
+    "rating": 4,
+    "comment": "Endroit calme et bien situé, parfait pour étudier."
+  }'
 
-# test coverage
-$ npm run test:cov
+# Lister les bibliothèques, 5 par page
+curl "http://localhost:3000/api/v1/places?categoryFilter=Library&page=1&limit=5"
 ```
 
-## Deployment
+## Modèle de données
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Place (endroit)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+| Champ           | Type           | Notes                                                                         |
+| --------------- | -------------- | ----------------------------------------------------------------------------- |
+| `id`            | string         | Généré, format `plc_01J` + 3 lettres majuscules + 3 chiffres                  |
+| `name`          | string         | Requis                                                                        |
+| `description`   | string         | Requis                                                                        |
+| `category`      | enum           | Requis, voir les [catégories](#catégories-dendroits)                          |
+| `address`       | string         | Requis, emplacement sur le campus                                             |
+| `services`      | string[]       | Optionnel, les valeurs doivent être uniques                                   |
+| `status`        | enum           | Optionnel, voir les [statuts](#statuts-dendroits)                             |
+| `averageRating` | number \| null | Calculée à partir des appréciations (1 décimale), `null` s'il n'y en a aucune |
+| `reviewCount`   | number         | Calculé à partir des appréciations                                            |
+| `createdAt`     | date ISO       | Défini automatiquement                                                        |
+| `updatedAt`     | date ISO       | Défini automatiquement                                                        |
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+#### Catégories d'endroits
+
+`Study Space`, `Library`, `Food Service`, `Sports`, `Student Service`, `Computer Lab`, `Other`
+
+#### Statuts d'endroits
+
+`Active`, `Temporarily Closed`, `Inactive`
+
+### Review (appréciation)
+
+| Champ        | Type     | Notes                                                        |
+| ------------ | -------- | ------------------------------------------------------------ |
+| `id`         | string   | Généré, format `rev_01J` + 3 lettres majuscules + 3 chiffres |
+| `placeId`    | string   | Requis, identifiant de l'endroit évalué                      |
+| `authorName` | string   | Requis                                                       |
+| `rating`     | integer  | Requis, de 1 à 5                                             |
+| `comment`    | string   | Requis                                                       |
+| `createdAt`  | date ISO | Défini automatiquement                                       |
+| `updatedAt`  | date ISO | Défini automatiquement                                       |
+
+### Règles d'affaires
+
+- Créer, modifier ou supprimer une appréciation recalcule la `averageRating` et le `reviewCount` de l'endroit concerné. Si une appréciation est déplacée vers un autre endroit, les deux endroits sont mis à jour.
+- Un endroit qui possède des appréciations ne peut pas être supprimé (`409 Conflict`).
+- Les corps de requête sont validés de façon stricte : les propriétés inconnues sont rejetées avec une erreur `400`.
+
+## Format des erreurs
+
+Les erreurs suivent le format [Problem Details](https://datatracker.ietf.org/doc/html/rfc9457) et sont retournées avec le type de contenu `application/problem+json` :
+
+```json
+{
+  "type": "about/blank",
+  "title": "Not Found",
+  "statusCode": 404,
+  "detail": "Place doesnt exist",
+  "instance": "/api/v1/places/plc_01JABC123"
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Structure du projet
 
-## Observability
+```
+src/
+├── main.ts                  # Démarrage de l'application
+├── app.module.ts            # Module racine
+├── jsondb.ts                # Couche de persistance minimale dans un fichier JSON
+├── configs/
+│   ├── app.config.ts        # Préfixe global, versionnement, validation, filtres
+│   └── swagger.config.ts    # Configuration OpenAPI / Swagger
+├── common/
+│   ├── dto/                 # DTO de pagination et de Problem Details
+│   └── filters/             # Filtre d'exceptions Problem Details
+├── places/                  # Module Places (contrôleur, service, DTO, entité, enums)
+└── reviews/                 # Module Reviews (contrôleur, service, DTO, entité)
+```
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+## Technologies
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+- [NestJS](https://nestjs.com/) 12 avec la plateforme Express
+- TypeScript, modules ES
+- `class-validator` / `class-transformer` pour la validation
+- `@nestjs/swagger` pour la documentation de l'API
+- `@nestjs/config` pour la configuration par variables d'environnement
+- Vitest et Supertest pour les tests, oxlint et Prettier pour le linting et le formatage
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+## Sources
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Pour la standarisation des exceptions: https://docs.nestjs.com/exception-filters#exception-filters-1
+- Pour la pagination: https://pietrzakadrian.com/blog/how-to-create-pagination-in-nestjs-with-typeorm-swagger
+- Pour la configuation (.env): https://docs.nestjs.com/application/configuration
+- Pour la céation de JsonDb: https://www.w3schools.com/nodejs/nodejs_filesystem.asp

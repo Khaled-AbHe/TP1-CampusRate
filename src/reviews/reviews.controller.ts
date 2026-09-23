@@ -26,7 +26,7 @@ import { UpdateReviewResponseDto } from './dto/responses/update-review-response.
 import { RemoveReviewResponseDto } from './dto/responses/remove-review-response.dto.js';
 import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
 
-@ApiTags('Appréciations')
+@ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
