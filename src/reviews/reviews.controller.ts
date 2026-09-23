@@ -25,6 +25,8 @@ import { CreateReviewResponseDto } from './dto/responses/create-review-response.
 import { UpdateReviewResponseDto } from './dto/responses/update-review-response.dto.js';
 import { RemoveReviewResponseDto } from './dto/responses/remove-review-response.dto.js';
 import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
+import { ApiPaginatedResponse } from '../common/api-paginated-response.js';
+import { ProblemDetailsDto } from '../common/dto/problem-details.dto.js';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -42,6 +44,7 @@ export class ReviewsController {
   })
   @ApiBadRequestResponse({
     description: 'Les données envoyées sont invalides.',
+    type: ProblemDetailsDto,
   })
   create(@Body() dto: CreateReviewDto) {
     return this.reviewsService.createReview(dto);
@@ -52,10 +55,7 @@ export class ReviewsController {
     summary: 'Lister toutes les appréciations',
     description: 'Retourne la liste complète des appréciations.',
   })
-  @ApiOkResponse({
-    description: 'Liste des appréciations récupérée avec succès.',
-    type: [Review],
-  })
+  @ApiPaginatedResponse(Review)
   findAll(@Query() dto: PageOptionsDto) {
     return this.reviewsService.findAllReviews(dto);
   }
@@ -76,6 +76,7 @@ export class ReviewsController {
   })
   @ApiNotFoundResponse({
     description: "Aucune appréciation ne correspond à l'identifiant fourni.",
+    type: ProblemDetailsDto,
   })
   findOne(@Param('id') id: string) {
     return this.reviewsService.findOneReviewById(id);
@@ -99,9 +100,11 @@ export class ReviewsController {
   })
   @ApiBadRequestResponse({
     description: 'Les données envoyées sont invalides.',
+    type: ProblemDetailsDto,
   })
   @ApiNotFoundResponse({
     description: "Aucune appréciation ne correspond à l'identifiant fourni.",
+    type: ProblemDetailsDto,
   })
   update(@Param('id') id: string, @Body() dto: UpdateReviewDto) {
     return this.reviewsService.updateReviewById(id, dto);
@@ -123,6 +126,7 @@ export class ReviewsController {
   })
   @ApiNotFoundResponse({
     description: "Aucune appréciation ne correspond à l'identifiant fourni.",
+    type: ProblemDetailsDto,
   })
   remove(@Param('id') id: string) {
     return this.reviewsService.removeReviewById(id);
