@@ -24,7 +24,7 @@ import { Place } from './entities/place.entity.js';
 import { RemovePlaceResponseDto } from './dto/responses/remove-place-response.dto.js';
 import { CreatePlaceResponseDto } from './dto/responses/create-place-response.dto.js';
 import { UpdatePlaceResponseDto } from './dto/responses/update-place-response.dto.js';
-import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
+import { PlacesPageOptionsDto } from '../common/dto/pagination/places-page-options.dto.js';
 
 @ApiTags('Places')
 @Controller('places')
@@ -56,7 +56,7 @@ export class PlacesController {
     description: 'Liste des endroits récupérée avec succès.',
     type: [Place],
   })
-  findAllPlaces(@Query() dto: PageOptionsDto) {
+  findAllPlaces(@Query() dto: PlacesPageOptionsDto) {
     return this.placesService.findAllPlaces(dto);
   }
 

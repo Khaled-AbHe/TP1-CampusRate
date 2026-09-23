@@ -7,7 +7,7 @@ import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
 import { JsonDb } from '../jsondb.js';
 import { Place } from './entities/place.entity.js';
-import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
+import { PlacesPageOptionsDto } from '../common/dto/pagination/places-page-options.dto.js';
 import { PageDto } from '../common/dto/pagination/page.dto.js';
 
 @Injectable()
@@ -23,18 +23,22 @@ export class PlacesService {
     return { message: 'Place created successfully!', data: place };
   }
 
-  async findAllPlaces(dto: PageOptionsDto): Promise<PageDto<Place>> {
+  async findAllPlaces(dto: PlacesPageOptionsDto): Promise<PageDto<Place>> {
     const allPlaces = await this.jdb.readData();
+
+    const filteredPlaces = dto.categoryFilter
+      ? allPlaces.filter((place) => place.category === dto.categoryFilter)
+      : allPlaces;
 
     const start = (dto.page - 1) * dto.limit;
 
     return {
-      data: allPlaces.slice(start, start + dto.limit),
+      data: filteredPlaces.slice(start, start + dto.limit),
       pagination: {
         page: dto.page,
         limit: dto.limit,
-        totalItems: allPlaces.length,
-        totalPages: Math.ceil(allPlaces.length / dto.limit),
+        totalItems: filteredPlaces.length,
+        totalPages: Math.ceil(filteredPlaces.length / dto.limit),
       },
     };
   }
