@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
 import { JsonDb } from '../jsondb.js';
@@ -50,6 +54,10 @@ export class PlacesService {
   async removePlaceById(id: string) {
     const allPlaces = await this.findAllPlaces();
     const targetPlace = await this.findOnePlaceById(id);
+
+    if (targetPlace.averageRating !== null || targetPlace.reviewCount !== 0) {
+      throw new BadRequestException('The place has ratings');
+    }
 
     const updatedPlaces = allPlaces.filter(
       (place) => place.id !== targetPlace.id,
