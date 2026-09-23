@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
-import { JsonDb } from '../jsondb.js';
+import { JsonDb } from '../common/storage/jsondb.js';
 import { Place } from './entities/place.entity.js';
-import { PlacesPageOptionsDto } from '../common/dto/pagination/places-page-options.dto.js';
-import { PageDto } from '../common/dto/pagination/page.dto.js';
+import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-options.dto.js';
+import { PageDto } from '../common/pagination/dto/page.dto.js';
 
 @Injectable()
 export class PlacesService {

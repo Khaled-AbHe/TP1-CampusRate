@@ -24,9 +24,9 @@ import { Review } from './entities/review.entity.js';
 import { CreateReviewResponseDto } from './dto/responses/create-review-response.dto.js';
 import { UpdateReviewResponseDto } from './dto/responses/update-review-response.dto.js';
 import { RemoveReviewResponseDto } from './dto/responses/remove-review-response.dto.js';
-import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
-import { ApiPaginatedResponse } from '../common/api-paginated-response.js';
-import { ProblemDetailsDto } from '../common/dto/problem-details.dto.js';
+import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
+import { ApiPaginatedResponse } from '../common/pagination/reponse/api-paginated-response.js';
+import { ProblemDetailsDto } from '../common/problemDetails/dto/problem-details.dto.js';
 
 @ApiTags('Reviews')
 @Controller('reviews')
