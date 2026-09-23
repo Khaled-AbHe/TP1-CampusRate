@@ -3,16 +3,21 @@ import { CreateReviewDto } from './dto/create-review.dto.js';
 import { UpdateReviewDto } from './dto/update-review.dto.js';
 import { JsonDb } from '../jsondb.js';
 import { Review } from './entities/review.entity.js';
+import { PlacesService } from '../places/places.service.js';
 
 @Injectable()
 export class ReviewsService {
   private readonly jdb: JsonDb = new JsonDb('reviews');
+
+  constructor(private placesService: PlacesService) {}
 
   async createReview(dto: CreateReviewDto) {
     const allReviews = await this.findAllReviews();
     const review = new Review(dto);
     allReviews.push(review);
     await this.jdb.writeData(allReviews);
+
+    await this.syncPlaceRatingStats(review.placeId);
 
     return { message: 'Review created successfully!', data: review };
   }
@@ -32,6 +37,7 @@ export class ReviewsService {
   }
 
   async updateReviewById(id: string, dto: UpdateReviewDto) {
+    const previousReview = await this.findOneReviewById(id); // get the review as reference
     const allReviews = await this.findAllReviews();
 
     const updatedReviews = allReviews.map((review) =>
@@ -39,6 +45,12 @@ export class ReviewsService {
     );
 
     await this.jdb.writeData(updatedReviews);
+
+    // If the placeId got changed, then we have to update the old place and the new place
+    await this.syncPlaceRatingStats(previousReview.placeId);
+    if (dto.placeId && dto.placeId !== previousReview.placeId) {
+      await this.syncPlaceRatingStats(dto.placeId);
+    }
 
     return {
       message: 'Review updated successfully!',
@@ -56,10 +68,30 @@ export class ReviewsService {
 
     await this.jdb.writeData(updatedReviews);
 
+    await this.syncPlaceRatingStats(targetReview.placeId);
+
     return {
       message: 'Review removed successfully!',
       removed_review: targetReview,
       data: updatedReviews,
     };
+  }
+
+  private async syncPlaceRatingStats(placeId: string) {
+    const relevantReviews = (await this.findAllReviews()).filter(
+      (review) => review.placeId === placeId,
+    );
+
+    const reviewCount = relevantReviews.length;
+    const averageRating =
+      reviewCount > 0
+        ? relevantReviews.reduce((sum, review) => sum + review.rating, 0) /
+          reviewCount
+        : null;
+
+    await this.placesService.updatePlaceById(placeId, {
+      averageRating: !averageRating ? averageRating : +averageRating.toFixed(1),
+      reviewCount: reviewCount,
+    });
   }
 }

@@ -29,7 +29,10 @@ export class PlacesService {
     return place;
   }
 
-  async updatePlaceById(id: string, dto: UpdatePlaceDto) {
+  async updatePlaceById(
+    id: string,
+    dto: UpdatePlaceDto | { averageRating: number | null; reviewCount: number },
+  ) {
     const allPlaces = await this.findAllPlaces();
 
     const updatedPlaces = allPlaces.map((place) =>
