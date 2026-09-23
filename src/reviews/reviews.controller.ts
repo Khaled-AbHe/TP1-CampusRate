@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,6 +24,7 @@ import { Review } from './entities/review.entity.js';
 import { CreateReviewResponseDto } from './dto/responses/create-review-response.dto.js';
 import { UpdateReviewResponseDto } from './dto/responses/update-review-response.dto.js';
 import { RemoveReviewResponseDto } from './dto/responses/remove-review-response.dto.js';
+import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
 
 @ApiTags('Appréciations')
 @Controller('reviews')
@@ -54,8 +56,8 @@ export class ReviewsController {
     description: 'Liste des appréciations récupérée avec succès.',
     type: [Review],
   })
-  findAll() {
-    return this.reviewsService.findAllReviews();
+  findAll(@Query() dto: PageOptionsDto) {
+    return this.reviewsService.findAllReviews(dto);
   }
 
   @Get(':id')

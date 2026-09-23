@@ -7,13 +7,15 @@ import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
 import { JsonDb } from '../jsondb.js';
 import { Place } from './entities/place.entity.js';
+import { PlacesPageOptionsDto } from '../common/dto/pagination/places-page-options.dto.js';
+import { PageDto } from '../common/dto/pagination/page.dto.js';
 
 @Injectable()
 export class PlacesService {
-  private readonly jdb: JsonDb = new JsonDb('places');
+  private readonly jdb: JsonDb<Place> = new JsonDb<Place>('places');
 
   async createPlace(dto: CreatePlaceDto) {
-    const allPlaces = await this.findAllPlaces();
+    const allPlaces = await this.jdb.readData();
     const place = new Place(dto);
     allPlaces.push(place);
     await this.jdb.writeData(allPlaces);
@@ -21,12 +23,28 @@ export class PlacesService {
     return { message: 'Place created successfully!', data: place };
   }
 
-  async findAllPlaces(): Promise<Place[]> {
-    return await this.jdb.readData();
+  async findAllPlaces(dto: PlacesPageOptionsDto): Promise<PageDto<Place>> {
+    const allPlaces = await this.jdb.readData();
+
+    const filteredPlaces = dto.categoryFilter
+      ? allPlaces.filter((place) => place.category === dto.categoryFilter)
+      : allPlaces;
+
+    const start = (dto.page - 1) * dto.limit;
+
+    return {
+      data: filteredPlaces.slice(start, start + dto.limit),
+      pagination: {
+        page: dto.page,
+        limit: dto.limit,
+        totalItems: filteredPlaces.length,
+        totalPages: Math.ceil(filteredPlaces.length / dto.limit),
+      },
+    };
   }
 
   async findOnePlaceById(id: string) {
-    const place = (await this.findAllPlaces()).find((place) => place.id === id);
+    const place = (await this.jdb.readData()).find((place) => place.id === id);
 
     if (!place) throw new NotFoundException('Place doesnt exist');
 
@@ -37,7 +55,7 @@ export class PlacesService {
     id: string,
     dto: UpdatePlaceDto | { averageRating: number | null; reviewCount: number },
   ) {
-    const allPlaces = await this.findAllPlaces();
+    const allPlaces = await this.jdb.readData();
 
     const updatedPlaces = allPlaces.map((place) =>
       place.id === id ? { ...place, ...dto, updatedAt: new Date() } : place,
@@ -52,7 +70,7 @@ export class PlacesService {
   }
 
   async removePlaceById(id: string) {
-    const allPlaces = await this.findAllPlaces();
+    const allPlaces = await this.jdb.readData();
     const targetPlace = await this.findOnePlaceById(id);
 
     if (targetPlace.averageRating !== null || targetPlace.reviewCount !== 0) {

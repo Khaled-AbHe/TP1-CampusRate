@@ -1,7 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { readFile, writeFile } from 'node:fs/promises';
 
-export class JsonDb {
+export class JsonDb<T> {
   private readonly filePath = 'src/database.json';
   private key: string;
 
@@ -50,7 +50,7 @@ export class JsonDb {
     }
   }
 
-  async readData(): Promise<any> {
+  async readData(): Promise<T[]> {
     try {
       const db = await this.getFullDatabase();
       return db[this.key];

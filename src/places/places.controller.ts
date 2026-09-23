@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,6 +24,7 @@ import { Place } from './entities/place.entity.js';
 import { RemovePlaceResponseDto } from './dto/responses/remove-place-response.dto.js';
 import { CreatePlaceResponseDto } from './dto/responses/create-place-response.dto.js';
 import { UpdatePlaceResponseDto } from './dto/responses/update-place-response.dto.js';
+import { PlacesPageOptionsDto } from '../common/dto/pagination/places-page-options.dto.js';
 
 @ApiTags('Places')
 @Controller('places')
@@ -54,8 +56,8 @@ export class PlacesController {
     description: 'Liste des endroits récupérée avec succès.',
     type: [Place],
   })
-  findAllPlaces() {
-    return this.placesService.findAllPlaces();
+  findAllPlaces(@Query() dto: PlacesPageOptionsDto) {
+    return this.placesService.findAllPlaces(dto);
   }
 
   @Get(':id')
