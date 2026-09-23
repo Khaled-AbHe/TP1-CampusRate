@@ -198,13 +198,18 @@ Les erreurs suivent le format [Problem Details](https://datatracker.ietf.org/doc
 src/
 ├── main.ts                  # Démarrage de l'application
 ├── app.module.ts            # Module racine
-├── jsondb.ts                # Couche de persistance minimale dans un fichier JSON
 ├── configs/
 │   ├── app.config.ts        # Préfixe global, versionnement, validation, filtres
 │   └── swagger.config.ts    # Configuration OpenAPI / Swagger
 ├── common/
-│   ├── dto/                 # DTO de pagination et de Problem Details
-│   └── filters/             # Filtre d'exceptions Problem Details
+│   ├── pagination/
+|   │   ├── dto/             # DTOs de pagination
+|   │   └── response/        # Format du pagination pour Swagger
+│   ├── problemDetails/
+|   │   ├── dto/             # DTO de Problem Details
+|   │   └── filter/          # Filtre d'exceptions Problem Details
+│   └── storage/
+|       └── jsondb.ts        # Couche de persistance minimale dans un fichier JSON
 ├── places/                  # Module Places (contrôleur, service, DTO, entité, enums)
 └── reviews/                 # Module Reviews (contrôleur, service, DTO, entité)
 ```
@@ -216,6 +221,8 @@ src/
 - `class-validator` / `class-transformer` pour la validation
 - `@nestjs/swagger` pour la documentation de l'API
 - `@nestjs/config` pour la configuration par variables d'environnement
+- `randexp` pour générer les IDs à partir d'un Regex 
+  - Lien vers son [GitHub](https://github.com/fent/randexp.js)
 - Vitest et Supertest pour les tests, oxlint et Prettier pour le linting et le formatage
 
 ## Sources
