@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto.js';
 import { UpdateReviewDto } from './dto/update-review.dto.js';
-import { JsonDb } from '../jsondb.js';
+import { JsonDb } from '../common/storage/jsondb.js';
 import { Review } from './entities/review.entity.js';
 import { PlacesService } from '../places/places.service.js';
-import { PageOptionsDto } from '../common/dto/pagination/page-options.dto.js';
-import { PageDto } from '../common/dto/pagination/page.dto.js';
+import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
+import { PageDto } from '../common/pagination/dto/page.dto.js';
 
 @Injectable()
 export class ReviewsService {

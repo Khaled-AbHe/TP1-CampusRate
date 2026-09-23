@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ProblemDetailsDto {
   @ApiProperty({
-    description: '',
-    example: '',
+    description: 'URI qui identifie le type de problème.',
+    example: 'about:blank',
   })
   type!: string;
 

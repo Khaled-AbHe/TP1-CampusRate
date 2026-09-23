@@ -24,7 +24,9 @@ import { Place } from './entities/place.entity.js';
 import { RemovePlaceResponseDto } from './dto/responses/remove-place-response.dto.js';
 import { CreatePlaceResponseDto } from './dto/responses/create-place-response.dto.js';
 import { UpdatePlaceResponseDto } from './dto/responses/update-place-response.dto.js';
-import { PlacesPageOptionsDto } from '../common/dto/pagination/places-page-options.dto.js';
+import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-options.dto.js';
+import { ApiPaginatedResponse } from '../common/pagination/reponse/api-paginated-response.js';
+import { ProblemDetailsDto } from '../common/problemDetails/dto/problem-details.dto.js';
 
 @ApiTags('Places')
 @Controller('places')
@@ -42,6 +44,7 @@ export class PlacesController {
   })
   @ApiBadRequestResponse({
     description: 'Les données envoyées sont invalides.',
+    type: ProblemDetailsDto,
   })
   create(@Body() createPlaceDto: CreatePlaceDto) {
     return this.placesService.createPlace(createPlaceDto);
@@ -52,10 +55,7 @@ export class PlacesController {
     summary: 'Lister tous les endroits',
     description: 'Retourne la liste complète des endroits du campus.',
   })
-  @ApiOkResponse({
-    description: 'Liste des endroits récupérée avec succès.',
-    type: [Place],
-  })
+  @ApiPaginatedResponse(Place)
   findAllPlaces(@Query() dto: PlacesPageOptionsDto) {
     return this.placesService.findAllPlaces(dto);
   }
@@ -76,6 +76,7 @@ export class PlacesController {
   })
   @ApiNotFoundResponse({
     description: "Aucun endroit ne correspond à l'identifiant fourni.",
+    type: ProblemDetailsDto,
   })
   findOnePlaceById(@Param('id') id: string) {
     return this.placesService.findOnePlaceById(id);
@@ -99,9 +100,11 @@ export class PlacesController {
   })
   @ApiBadRequestResponse({
     description: 'Les données envoyées sont invalides.',
+    type: ProblemDetailsDto,
   })
   @ApiNotFoundResponse({
     description: "Aucun endroit ne correspond à l'identifiant fourni.",
+    type: ProblemDetailsDto,
   })
   update(@Param('id') id: string, @Body() dto: UpdatePlaceDto) {
     return this.placesService.updatePlaceById(id, dto);
@@ -123,6 +126,7 @@ export class PlacesController {
   })
   @ApiNotFoundResponse({
     description: "Aucun endroit ne correspond à l'identifiant fourni.",
+    type: ProblemDetailsDto,
   })
   remove(@Param('id') id: string) {
     return this.placesService.removePlaceById(id);
