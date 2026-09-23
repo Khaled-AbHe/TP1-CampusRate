@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -56,7 +56,7 @@ export class PlacesService {
     const targetPlace = await this.findOnePlaceById(id);
 
     if (targetPlace.averageRating !== null || targetPlace.reviewCount !== 0) {
-      throw new BadRequestException('The place has ratings');
+      throw new ConflictException('The place has ratings');
     }
 
     const updatedPlaces = allPlaces.filter(

@@ -3,6 +3,7 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
+import { ProblemDetailsFilter } from '../common/filters/problem-details.filter.js';
 
 export function AppConfig(app: INestApplication) {
   app.setGlobalPrefix('api');
@@ -20,4 +21,6 @@ export function AppConfig(app: INestApplication) {
       transform: true,
     }),
   );
+
+  app.useGlobalFilters(new ProblemDetailsFilter());
 }
