@@ -6,7 +6,7 @@ import {
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
 import { JsonDb } from '../common/storage/jsondb.js';
-import { Place } from './entities/place.entity.js';
+import { Place } from './models/place.entity.js';
 import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-options.dto.js';
 import { PageDto } from '../common/pagination/dto/page.dto.js';
 

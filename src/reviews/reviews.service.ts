@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto.js';
 import { UpdateReviewDto } from './dto/update-review.dto.js';
 import { JsonDb } from '../common/storage/jsondb.js';
-import { Review } from './entities/review.entity.js';
+import { Review } from './models/review.entity.js';
 import { PlacesService } from '../places/places.service.js';
 import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
 import { PageDto } from '../common/pagination/dto/page.dto.js';
