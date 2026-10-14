@@ -23,7 +23,7 @@ import databaseConfig from './configs/database.config.js';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
         autoIndex: configService.get<string>('NODE_ENV') !== 'prod', // Désactive l'auto-indexation en prod pour les performances
       }),

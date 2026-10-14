@@ -53,7 +53,7 @@ export class PlacesService {
     dto: UpdatePlaceDto | { averageRating: number | null; reviewCount: number },
   ) {
     const place = await this.placeModel
-      .findByIdAndUpdate(id, dto, { new: true })
+      .findByIdAndUpdate(id, dto, { returnDocument: 'after' })
       .exec();
 
     if (!place) throw new NotFoundException('Place doesnt exist');
@@ -67,7 +67,10 @@ export class PlacesService {
   async removePlaceById(id: string) {
     const targetPlace = await this.findOnePlaceById(id);
 
-    if (targetPlace.averageRating !== null || targetPlace.reviewCount !== 0) {
+    if (
+      targetPlace.averageRating !== null ||
+      targetPlace.reviewCount !== null
+    ) {
       throw new ConflictException('The place has ratings');
     }
 

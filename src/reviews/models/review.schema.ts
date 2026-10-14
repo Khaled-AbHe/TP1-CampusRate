@@ -1,16 +1,30 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import RandExp from 'randexp';
 
-@Schema({ timestamps: true })
-export class Review extends Document {
+@Schema({
+  timestamps: true,
+  versionKey: false,
+  toJSON: {
+    virtuals: true,
+    transform: (_doc, ret: Record<string, unknown>) => {
+      delete ret._id;
+      return ret;
+    },
+  },
+})
+export class Review extends Document<string> {
   @ApiProperty({
     description:
       "Identifiant unique de l'appréciation. (rev_01J[3 caractères majusticule][3 chiffres])",
     example: 'rev_01JABC123',
   })
-  @Prop({ required: true, unique: true })
-  id!: string;
+  @Prop({
+    type: String,
+    default: () => new RandExp(/^rev_01J[A-Z]{3}\d{3}$/).gen(),
+  })
+  declare _id: string;
 
   @ApiProperty({
     description: "Identifiant de l'endroit concerné par l'appréciation",
@@ -57,4 +71,5 @@ export class Review extends Document {
   updatedAt: Date;
 }
 
-export const ReviewSchema = SchemaFactory.createForClass(Review);
+export const ReviewSchema: MongooseSchema<Review> =
+  SchemaFactory.createForClass(Review);

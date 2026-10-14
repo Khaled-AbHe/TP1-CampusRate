@@ -51,7 +51,7 @@ export class ReviewsService {
     const previousReview = await this.findOneReviewById(id); // get the review as reference
 
     const review = await this.reviewModel
-      .findByIdAndUpdate(id, dto, { new: true })
+      .findByIdAndUpdate(id, dto, { returnDocument: 'after' })
       .exec();
 
     if (!review) throw new NotFoundException('Review doesnt exist');
@@ -99,4 +99,4 @@ export class ReviewsService {
       reviewCount: reviewCount,
     });
   }
-}
+}//

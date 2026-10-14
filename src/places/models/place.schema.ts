@@ -1,18 +1,32 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Category } from '../enums/category.enum.js';
 import { Status } from '../enums/status.enum.js';
+import RandExp from 'randexp';
 
-@Schema({ timestamps: true })
-export class Place extends Document {
+@Schema({
+  timestamps: true,
+  versionKey: false,
+  toJSON: {
+    virtuals: true,
+    transform: (_doc, ret: Record<string, unknown>) => {
+      delete ret._id;
+      return ret;
+    },
+  },
+})
+export class Place extends Document<string> {
   @ApiProperty({
     description:
       "Identifiant unique de l'endroit. (plc_01J[3 caractères majusticule][3 chiffres])",
     example: 'plc_01JABC123',
   })
-  @Prop({ required: true, unique: true })
-  id!: string;
+  @Prop({
+    type: String,
+    default: () => new RandExp(/^plc_01J[A-Z]{3}\d{3}$/).gen(),
+  })
+  declare _id: string;
 
   @ApiProperty({
     description: "Nom de l'endroit",
@@ -66,7 +80,7 @@ export class Place extends Document {
     example: 4.5,
     nullable: true,
   })
-  @Prop({ default: null })
+  @Prop({ type: Number, default: null })
   averageRating: number | null;
 
   @ApiProperty({
@@ -91,4 +105,5 @@ export class Place extends Document {
   updatedAt: Date;
 }
 
-export const PlaceSchema = SchemaFactory.createForClass(Place);
+export const PlaceSchema: MongooseSchema<Place> =
+  SchemaFactory.createForClass(Place);
