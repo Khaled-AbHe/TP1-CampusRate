@@ -3,13 +3,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PageDto } from '../common/pagination/dto/page.dto.js';
+import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-options.dto.js';
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
-import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-options.dto.js';
-import { PageDto } from '../common/pagination/dto/page.dto.js';
-import { InjectModel } from '@nestjs/mongoose';
 import { Place } from './models/place.schema.js';
-import { Model } from 'mongoose';
 
 @Injectable()
 export class PlacesService {

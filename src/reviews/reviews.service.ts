@@ -1,23 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateReviewDto } from './dto/create-review.dto.js';
-import { UpdateReviewDto } from './dto/update-review.dto.js';
-import { JsonDb } from '../common/storage/jsondb.js';
-import { Review } from './models/review.entity.js';
-import { PlacesService } from '../places/places.service.js';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
 import { PageDto } from '../common/pagination/dto/page.dto.js';
+import { PlacesService } from '../places/places.service.js';
+import { CreateReviewDto } from './dto/create-review.dto.js';
+import { UpdateReviewDto } from './dto/update-review.dto.js';
+import { Review } from './models/review.schema.js';
 
 @Injectable()
 export class ReviewsService {
-  private readonly jdb: JsonDb<Review> = new JsonDb<Review>('reviews');
-
-  constructor(private placesService: PlacesService) {}
+  constructor(
+    @InjectModel(Review.name) private reviewModel: Model<Review>,
+    private placesService: PlacesService,
+  ) {}
 
   async createReview(dto: CreateReviewDto) {
-    const allReviews = await this.jdb.readData();
-    const review = new Review(dto);
-    allReviews.push(review);
-    await this.jdb.writeData(allReviews);
+    const review = await this.reviewModel.create(dto);
 
     await this.syncPlaceRatingStats(review.placeId);
 
@@ -25,25 +24,23 @@ export class ReviewsService {
   }
 
   async findAllReviews(dto: PageOptionsDto): Promise<PageDto<Review>> {
-    const allPlaces = await this.jdb.readData();
+    const allReviews = await this.reviewModel.find().exec();
 
     const start = (dto.page - 1) * dto.limit;
 
     return {
-      data: allPlaces.slice(start, start + dto.limit),
+      data: allReviews.slice(start, start + dto.limit),
       pagination: {
         page: dto.page,
         limit: dto.limit,
-        totalItems: allPlaces.length,
-        totalPages: Math.ceil(allPlaces.length / dto.limit),
+        totalItems: allReviews.length,
+        totalPages: Math.ceil(allReviews.length / dto.limit),
       },
     };
   }
 
   async findOneReviewById(id: string) {
-    const review = (await this.jdb.readData()).find(
-      (review) => review.id === id,
-    );
+    const review = await this.reviewModel.findById(id).exec();
 
     if (!review) throw new NotFoundException('Review doesnt exist');
 
@@ -52,13 +49,12 @@ export class ReviewsService {
 
   async updateReviewById(id: string, dto: UpdateReviewDto) {
     const previousReview = await this.findOneReviewById(id); // get the review as reference
-    const allReviews = await this.jdb.readData();
 
-    const updatedReviews = allReviews.map((review) =>
-      review.id === id ? { ...review, ...dto, updatedAt: new Date() } : review,
-    );
+    const review = await this.reviewModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .exec();
 
-    await this.jdb.writeData(updatedReviews);
+    if (!review) throw new NotFoundException('Review doesnt exist');
 
     // If the placeId got changed, then we have to update the old place and the new place
     await this.syncPlaceRatingStats(previousReview.placeId);
@@ -68,31 +64,26 @@ export class ReviewsService {
 
     return {
       message: 'Review updated successfully!',
-      data: await this.findOneReviewById(id),
+      data: review,
     };
   }
 
   async removeReviewById(id: string) {
-    const allReviews = await this.jdb.readData();
-    const targetReview = await this.findOneReviewById(id);
+    const targetReview = await this.reviewModel.findByIdAndDelete(id).exec();
 
-    const updatedReviews = allReviews.filter(
-      (review) => review.id !== targetReview.id,
-    );
-
-    await this.jdb.writeData(updatedReviews);
+    if (!targetReview) throw new NotFoundException('This review doesnt exist');
 
     await this.syncPlaceRatingStats(targetReview.placeId);
 
     return {
       message: 'Review removed successfully!',
       removed_review: targetReview,
-      data: updatedReviews,
+      data: await this.reviewModel.find().exec(),
     };
   }
 
   private async syncPlaceRatingStats(placeId: string) {
-    const relevantReviews = (await this.jdb.readData()).filter(
+    const relevantReviews = (await this.reviewModel.find().exec()).filter(
       (review) => review.placeId === placeId,
     );
 
