@@ -4,8 +4,14 @@ import {
   VersioningType,
 } from '@nestjs/common';
 import { ProblemDetailsFilter } from '../common/problemDetails/filter/problem-details.filter.js';
+import helmet from 'helmet';
+import { ConfigService } from '@nestjs/config';
 
 export function AppConfig(app: INestApplication) {
+  const config = app.get(ConfigService);
+
+  app.use(helmet());
+
   app.enableCors({
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type'],
