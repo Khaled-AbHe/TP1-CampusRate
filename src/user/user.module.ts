@@ -35,5 +35,6 @@ import { Student, StudentSchema } from './models/student.model.js';
   ],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
-export class UserModule {}
+export class UsersModule {}

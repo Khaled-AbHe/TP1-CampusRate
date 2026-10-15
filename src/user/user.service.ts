@@ -66,4 +66,12 @@ export class UsersService {
 
     return { message: 'User removed successfully!', removed_user: user };
   }
+
+  async findByUsername(username: string) {
+    const user = await this.userModel.findOne({ username }).exec();
+
+    if (!user) throw new NotFoundException('User doesnt exist');
+
+    return user;
+  }
 }

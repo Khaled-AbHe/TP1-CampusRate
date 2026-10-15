@@ -13,6 +13,7 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { type Request as ExpressRequest } from 'express';
@@ -56,6 +57,7 @@ export class AuthController {
     description: 'Jeton manquant, invalide ou expiré',
     type: ProblemDetailsDto,
   })
+  @ApiBearerAuth()
   getProfile(@Request() req: ExpressRequest) {
     return req.user;
   }
