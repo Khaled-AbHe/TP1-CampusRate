@@ -1,13 +1,12 @@
 import {
-  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/create-user.dto.js';
-import { UpdateUserDto } from './dto/update-user.dto.js';
+import { CreateUserDto } from './dtos/create-user.dto.js';
+import { UpdateUserDto } from './dtos/update-user.dto.js';
 import { UserType } from './enum/user-type.enum.js';
 import { Admin } from './models/admin.model.js';
 import { Student } from './models/student.model.js';

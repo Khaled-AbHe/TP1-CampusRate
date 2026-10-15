@@ -1,7 +1,7 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Schema as MongooseSchema } from 'mongoose';
-import { Review } from '../../reviews/models/review.schema.js';
+import { Review } from '../../../reviews/models/review.schema.js';
 import { User } from './user.schema.js';
 
 @Schema({
