@@ -4,10 +4,12 @@ import { ReviewsModule } from './reviews/reviews.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi = require('joi');
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module.js';
 import databaseConfig from './configs/database.config.js';
 
 @Module({
   imports: [
+    AuthModule,
     PlacesModule,
     ReviewsModule,
 
@@ -16,6 +18,7 @@ import databaseConfig from './configs/database.config.js';
       isGlobal: true,
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
         PORT: Joi.number().default(3000),
       }),
     }),
