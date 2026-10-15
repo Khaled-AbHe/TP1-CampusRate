@@ -6,6 +6,11 @@ import {
 import { ProblemDetailsFilter } from '../common/problemDetails/filter/problem-details.filter.js';
 
 export function AppConfig(app: INestApplication) {
+  app.enableCors({
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type'],
+  });
+
   app.setGlobalPrefix('api');
 
   app.enableVersioning({
