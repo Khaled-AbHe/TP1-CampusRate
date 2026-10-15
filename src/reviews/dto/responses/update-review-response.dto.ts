@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Review } from '../../models/review.entity.js';
+import { Review } from '../../models/review.schema.js';
 
 export class UpdateReviewResponseDto {
   @ApiProperty({ example: 'Review updated successfully!' })

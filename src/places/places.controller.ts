@@ -20,13 +20,13 @@ import {
 import { PlacesService } from './places.service.js';
 import { CreatePlaceDto } from './dto/create-place.dto.js';
 import { UpdatePlaceDto } from './dto/update-place.dto.js';
-import { Place } from './models/place.entity.js';
 import { RemovePlaceResponseDto } from './dto/responses/remove-place-response.dto.js';
 import { CreatePlaceResponseDto } from './dto/responses/create-place-response.dto.js';
 import { UpdatePlaceResponseDto } from './dto/responses/update-place-response.dto.js';
 import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-options.dto.js';
 import { ApiPaginatedResponse } from '../common/pagination/reponse/api-paginated-response.js';
 import { ProblemDetailsDto } from '../common/problemDetails/dto/problem-details.dto.js';
+import { Place } from './models/place.schema.js';
 
 @ApiTags('Places')
 @Controller('places')

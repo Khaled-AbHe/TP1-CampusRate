@@ -20,13 +20,13 @@ import {
 import { ReviewsService } from './reviews.service.js';
 import { CreateReviewDto } from './dto/create-review.dto.js';
 import { UpdateReviewDto } from './dto/update-review.dto.js';
-import { Review } from './models/review.entity.js';
 import { CreateReviewResponseDto } from './dto/responses/create-review-response.dto.js';
 import { UpdateReviewResponseDto } from './dto/responses/update-review-response.dto.js';
 import { RemoveReviewResponseDto } from './dto/responses/remove-review-response.dto.js';
 import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
 import { ApiPaginatedResponse } from '../common/pagination/reponse/api-paginated-response.js';
 import { ProblemDetailsDto } from '../common/problemDetails/dto/problem-details.dto.js';
+import { Review } from './models/review.schema.js';
 
 @ApiTags('Reviews')
 @Controller('reviews')
