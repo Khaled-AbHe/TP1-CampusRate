@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserService } from './user.service.js';
-import { UserController } from './user.controller.js';
+import { UsersService } from './user.service.js';
+import { UsersController } from './user.controller.js';
 import { UserType } from './enum/user-type.enum.js';
 import { User, UserSchema } from './models/user.schema.js';
 import { Admin, AdminSchema } from './models/admin.model.js';
@@ -33,7 +33,7 @@ import { Student, StudentSchema } from './models/student.model.js';
       },
     ]),
   ],
-  controllers: [UserController],
-  providers: [UserService],
+  controllers: [UsersController],
+  providers: [UsersService],
 })
 export class UserModule {}
