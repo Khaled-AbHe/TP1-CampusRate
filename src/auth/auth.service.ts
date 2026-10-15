@@ -8,15 +8,15 @@ export class AuthService {
 
   // Simuler une base de données d'utilisateurs
   private users = [
-    { id: 1, username: 'user1', password: bcrypt.hash('password1', 10) },
-    { id: 2, username: 'user2', password: bcrypt.hash('password2', 10) },
+    { id: 1, username: 'user1', password: bcrypt.hashSync('password1', 10) },
+    { id: 2, username: 'user2', password: bcrypt.hashSync('password2', 10) },
   ];
 
   // Valider un utilisateur
   async validateUser(username: string, password: string): Promise<any> {
     const user = this.users.find((u) => u.username === username);
-    
-    if (user && (await bcrypt.compare(password, await user.password))) {
+
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result; // Retourne l'utilisateur sans le mot de passe
     }

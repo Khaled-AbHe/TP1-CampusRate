@@ -5,12 +5,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi = require('joi');
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module.js';
-import { UserModule } from './user/user.module.js';
-import { AuthModule } from './auth/auth.module.js';
 import databaseConfig from './configs/database.config.js';
 
 @Module({
   imports: [
+    AuthModule,
     PlacesModule,
     ReviewsModule,
 
@@ -19,6 +18,7 @@ import databaseConfig from './configs/database.config.js';
       isGlobal: true,
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
         PORT: Joi.number().default(3000),
       }),
     }),
@@ -31,10 +31,6 @@ import databaseConfig from './configs/database.config.js';
         autoIndex: configService.get<string>('NODE_ENV') !== 'prod', // Désactive l'auto-indexation en prod pour les performances
       }),
     }),
-
-    AuthModule,
-
-    UserModule,
   ],
 })
 export class AppModule {}
