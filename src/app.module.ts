@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi = require('joi');
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module.js';
+import { UserModule } from './user/user.module.js';
 import databaseConfig from './configs/database.config.js';
 
 @Module({
@@ -31,6 +32,8 @@ import databaseConfig from './configs/database.config.js';
         autoIndex: configService.get<string>('NODE_ENV') !== 'prod', // Désactive l'auto-indexation en prod pour les performances
       }),
     }),
+
+    UserModule,
   ],
 })
 export class AppModule {}
