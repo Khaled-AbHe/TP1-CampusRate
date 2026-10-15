@@ -7,7 +7,6 @@ import {
   Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
-import { JwtAuthGuard } from './jwt/jwt-auth.guard.js';
 import { type Request as ExpressRequest } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
