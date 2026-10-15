@@ -38,7 +38,9 @@ export class ProblemDetailsFilter implements ExceptionFilter {
         type: 'about:blank',
         title: STATUS_CODES[status],
         status,
-        detail: isHttp ? exception.message : 'Internal server error',
+        detail: isHttp
+          ? ((response as { message?: unknown }).message ?? exception.message)
+          : 'Internal server error',
         instance: request.url,
       });
   }
