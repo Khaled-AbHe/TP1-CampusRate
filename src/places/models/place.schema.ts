@@ -1,27 +1,45 @@
-import RandExp from 'randexp';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreatePlaceDto } from '../dto/create-place.dto.js';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Category } from '../enums/category.enum.js';
 import { Status } from '../enums/status.enum.js';
+import RandExp from 'randexp';
 
-export class Place {
+@Schema({
+  timestamps: true,
+  versionKey: false,
+  toJSON: {
+    virtuals: true,
+    transform: (_doc, ret: Record<string, unknown>) => {
+      delete ret._id;
+      return ret;
+    },
+  },
+})
+export class Place extends Document<string> {
   @ApiProperty({
     description:
       "Identifiant unique de l'endroit. (plc_01J[3 caractères majusticule][3 chiffres])",
     example: 'plc_01JABC123',
   })
-  id!: string;
+  @Prop({
+    type: String,
+    default: () => new RandExp(/^plc_01J[A-Z]{3}\d{3}$/).gen(),
+  })
+  declare _id: string;
 
   @ApiProperty({
     description: "Nom de l'endroit",
     example: 'Bibliothèque centrale',
   })
+  @Prop({ required: true })
   name!: string;
 
   @ApiProperty({
     description: "Description de l'endroit",
     example: 'Grand espace de lecture calme avec prises électriques',
   })
+  @Prop({ required: true })
   description!: string;
 
   @ApiProperty({
@@ -29,12 +47,14 @@ export class Place {
     enum: Category,
     example: Category.LIBRARY,
   })
+  @Prop({ required: true })
   category!: Category;
 
   @ApiProperty({
     description: "Adresse ou localisation de l'endroit sur le campus",
     example: 'Pavillon A, 2e étage',
   })
+  @Prop({ required: true })
   address!: string;
 
   @ApiProperty({
@@ -51,6 +71,7 @@ export class Place {
     required: false,
     example: Status.ACTIVE,
   })
+  @Prop({ default: null })
   status?: Status;
 
   @ApiProperty({
@@ -59,37 +80,30 @@ export class Place {
     example: 4.5,
     nullable: true,
   })
+  @Prop({ type: Number, default: null })
   averageRating: number | null;
 
   @ApiProperty({
     description: "Nombre total d'avis associés à l'endroit",
     example: 12,
   })
+  @Prop({ default: null })
   reviewCount: number;
 
   @ApiProperty({
     description: "Date de création l'endroit",
     example: '2026-01-15T10:30:00.000Z',
   })
+  @Prop({ default: null })
   createdAt: Date;
 
   @ApiProperty({
     description: "Date de dernière modification de l'endroit",
     example: '2026-02-01T08:00:00.000Z',
   })
+  @Prop({ default: null })
   updatedAt: Date;
-
-  constructor(dto: CreatePlaceDto) {
-    this.id = new RandExp(/^plc_01J[A-Z]{3}\d{3}$/).gen();
-    this.name = dto.name;
-    this.description = dto.description;
-    this.category = dto.category;
-    this.address = dto.address;
-    this.services = dto.services;
-    this.status = dto.status;
-    this.averageRating = null;
-    this.reviewCount = 0;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
 }
+
+export const PlaceSchema: MongooseSchema<Place> =
+  SchemaFactory.createForClass(Place);

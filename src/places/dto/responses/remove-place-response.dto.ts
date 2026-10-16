@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Place } from '../../entities/place.entity.js';
+import { Place } from '../../models/place.schema.js';
 
 export class RemovePlaceResponseDto {
   @ApiProperty({ example: 'Place removed successfully!' })
