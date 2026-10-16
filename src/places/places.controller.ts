@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -27,12 +28,16 @@ import { PlacesPageOptionsDto } from '../common/pagination/dto/places-page-optio
 import { ApiPaginatedResponse } from '../common/pagination/reponse/api-paginated-response.js';
 import { ProblemDetailsDto } from '../common/problemDetails/dto/problem-details.dto.js';
 import { Place } from './models/place.schema.js';
+import { AuthGuard } from '@nestjs/passport';
+import { AdminGuard } from '../common/guards/admin.guard.js';
 
+@UseGuards(AuthGuard('jwt'))
 @ApiTags('Places')
 @Controller('places')
 export class PlacesController {
   constructor(private readonly placesService: PlacesService) {}
 
+  @UseGuards(AdminGuard)
   @Post()
   @ApiOperation({
     summary: 'Créer un nouveau endroit évalué',
@@ -82,6 +87,7 @@ export class PlacesController {
     return this.placesService.findOnePlaceById(id);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id')
   @ApiOperation({
     summary: 'Mettre à jour un endroit',
@@ -110,6 +116,7 @@ export class PlacesController {
     return this.placesService.updatePlaceById(id, dto);
   }
 
+  @UseGuards(AdminGuard)
   @Delete(':id')
   @ApiOperation({
     summary: 'Supprimer un endroit',
