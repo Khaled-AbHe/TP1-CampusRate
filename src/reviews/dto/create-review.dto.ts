@@ -20,14 +20,6 @@ export class CreateReviewDto {
   placeId!: string;
 
   @ApiProperty({
-    description: "Nom de l'auteur de l'appréciation",
-    example: 'Camille Tremblay',
-  })
-  @IsString()
-  @IsNotEmpty()
-  authorName!: string;
-
-  @ApiProperty({
     description: "Note attribuée à l'endroit, de 1 à 5",
     minimum: 1,
     maximum: 5,

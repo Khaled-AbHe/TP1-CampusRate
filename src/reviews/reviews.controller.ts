@@ -31,6 +31,8 @@ import { Review } from './models/review.schema.js';
 import { AuthGuard } from '@nestjs/passport';
 import { StudentGuard } from '../common/guards/student.guard.js';
 import { AdminGuard } from '../common/guards/admin.guard.js';
+import { CurrentUser } from '../common/decorators/current-user.decorator.js';
+import { User } from '../account/user/models/user.schema.js';
 
 @UseGuards(AuthGuard('jwt'))
 @ApiTags('Reviews')
@@ -52,8 +54,8 @@ export class ReviewsController {
     description: 'Les données envoyées sont invalides.',
     type: ProblemDetailsDto,
   })
-  create(@Body() dto: CreateReviewDto) {
-    return this.reviewsService.createReview(dto);
+  create(@CurrentUser() user: User, @Body() dto: CreateReviewDto) {
+    return this.reviewsService.createReview(user, dto);
   }
 
   @UseGuards(AdminGuard)

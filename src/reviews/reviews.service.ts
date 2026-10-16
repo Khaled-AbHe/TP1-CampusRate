@@ -7,6 +7,7 @@ import { PlacesService } from '../places/places.service.js';
 import { CreateReviewDto } from './dto/create-review.dto.js';
 import { UpdateReviewDto } from './dto/update-review.dto.js';
 import { Review } from './models/review.schema.js';
+import { User } from '../account/user/models/user.schema.js';
 
 @Injectable()
 export class ReviewsService {
@@ -15,8 +16,11 @@ export class ReviewsService {
     private placesService: PlacesService,
   ) {}
 
-  async createReview(dto: CreateReviewDto) {
-    const review = await this.reviewModel.create(dto);
+  async createReview(user: User, dto: CreateReviewDto) {
+    const review = await this.reviewModel.create({
+      ...dto,
+      authorName: user.username,
+    });
 
     await this.syncPlaceRatingStats(review.placeId);
 
@@ -99,4 +103,4 @@ export class ReviewsService {
       reviewCount: reviewCount,
     });
   }
-}//
+} //
