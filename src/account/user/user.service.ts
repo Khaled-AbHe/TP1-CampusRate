@@ -33,7 +33,7 @@ export class UsersService {
   }
 
   async findOneUserById(id: string) {
-    const user = await this.userModel.findById(id).exec();
+    const user = await this.userModel.findById(id).populate('reviews').exec();
 
     if (!user) throw new NotFoundException('User doesnt exist');
 

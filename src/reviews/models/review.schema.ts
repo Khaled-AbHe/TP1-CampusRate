@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import RandExp from 'randexp';
+import { Student } from '../../account/user/models/student.model.js';
 
 @Schema({
   timestamps: true,
@@ -34,11 +35,11 @@ export class Review extends Document<string> {
   placeId!: string;
 
   @ApiProperty({
-    description: "Nom de l'auteur de l'appréciation",
-    example: 'Camille Tremblay',
+    description: "Identifiant de l'étudiant qui a écrit l'appréciation",
+    example: 'usr_01JABC123',
   })
-  @Prop({ required: true })
-  authorName!: string;
+  @Prop({ type: String, ref: 'Student', required: true, index: true })
+  student!: string;
 
   @ApiProperty({
     description: "Note attribuée à l'endroit, de 1 à 5",
