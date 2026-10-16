@@ -4,12 +4,12 @@ import { ReviewsModule } from './reviews/reviews.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi = require('joi');
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule } from './auth/auth.module.js';
 import databaseConfig from './configs/database.config.js';
+import { AccountsModule } from './account/accounts.module.js';
 
 @Module({
   imports: [
-    AuthModule,
+    AccountsModule,
     PlacesModule,
     ReviewsModule,
 

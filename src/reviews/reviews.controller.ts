@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -27,12 +28,18 @@ import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
 import { ApiPaginatedResponse } from '../common/pagination/reponse/api-paginated-response.js';
 import { ProblemDetailsDto } from '../common/problemDetails/dto/problem-details.dto.js';
 import { Review } from './models/review.schema.js';
+import { AuthGuard } from '@nestjs/passport';
+import { StudentGuard } from '../common/guards/student.guard.js';
+import { AdminGuard } from '../common/guards/admin.guard.js';
+import { CurrentUser } from '../common/decorators/current-user.decorator.js';
 
+@UseGuards(AuthGuard('jwt'))
 @ApiTags('Reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
+  @UseGuards(StudentGuard)
   @Post()
   @ApiOperation({
     summary: 'Créer une nouvelle appréciation',
@@ -46,10 +53,14 @@ export class ReviewsController {
     description: 'Les données envoyées sont invalides.',
     type: ProblemDetailsDto,
   })
-  create(@Body() dto: CreateReviewDto) {
-    return this.reviewsService.createReview(dto);
+  create(
+    @CurrentUser() user: { userId: string },
+    @Body() dto: CreateReviewDto,
+  ) {
+    return this.reviewsService.createReview(user.userId, dto);
   }
 
+  @UseGuards(AdminGuard)
   @Get()
   @ApiOperation({
     summary: 'Lister toutes les appréciations',
@@ -82,6 +93,7 @@ export class ReviewsController {
     return this.reviewsService.findOneReviewById(id);
   }
 
+  @UseGuards(StudentGuard)
   @Patch(':id')
   @ApiOperation({
     summary: 'Mettre à jour une appréciation',

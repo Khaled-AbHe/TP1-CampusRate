@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
 import { PageDto } from '../common/pagination/dto/page.dto.js';
 import { PlacesService } from '../places/places.service.js';
@@ -15,8 +15,11 @@ export class ReviewsService {
     private placesService: PlacesService,
   ) {}
 
-  async createReview(dto: CreateReviewDto) {
-    const review = await this.reviewModel.create(dto);
+  async createReview(userId: string, dto: CreateReviewDto) {
+    const review = await this.reviewModel.create({
+      ...dto,
+      student: userId,
+    });
 
     await this.syncPlaceRatingStats(review.placeId);
 
@@ -99,4 +102,4 @@ export class ReviewsService {
       reviewCount: reviewCount,
     });
   }
-}//
+} //

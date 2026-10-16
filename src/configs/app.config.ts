@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { ProblemDetailsFilter } from '../common/problemDetails/filter/problem-details.filter.js';
 import helmet from 'helmet';
+import { DuplicateUsernameFilter } from '../account/user/exceptions/duplicate-username.exception.js';
 
 export function AppConfig(app: INestApplication) {
   app.use(helmet());
@@ -30,5 +31,8 @@ export function AppConfig(app: INestApplication) {
     }),
   );
 
-  app.useGlobalFilters(new ProblemDetailsFilter());
+  app.useGlobalFilters(
+    new ProblemDetailsFilter(),
+    new DuplicateUsernameFilter(),
+  );
 }
