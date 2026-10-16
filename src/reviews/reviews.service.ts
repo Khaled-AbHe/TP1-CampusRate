@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { PageOptionsDto } from '../common/pagination/dto/page-options.dto.js';
 import { PageDto } from '../common/pagination/dto/page.dto.js';
 import { PlacesService } from '../places/places.service.js';

@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import RandExp from 'randexp';
-import { Student } from '../../account/user/models/student.model.js';
 
 @Schema({
   timestamps: true,
