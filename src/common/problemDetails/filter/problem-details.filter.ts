@@ -38,10 +38,17 @@ export class ProblemDetailsFilter implements ExceptionFilter {
         type: 'about:blank',
         title: STATUS_CODES[status],
         status,
-        detail: isHttp
-          ? ((response as { message?: unknown }).message ?? exception.message)
-          : 'Internal server error',
+        detail: isHttp ? this.getDetail(exception) : 'Internal server error',
         instance: request.url,
       });
+  }
+
+  private getDetail(exception: HttpException): string {
+    const body = exception.getResponse();
+    const message =
+      typeof body === 'object' ? (body as { message?: unknown }).message : body;
+
+    if (Array.isArray(message)) return message.join('; ');
+    return typeof message === 'string' ? message : exception.message;
   }
 }
